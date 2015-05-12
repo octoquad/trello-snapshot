@@ -37,7 +37,7 @@ git config --global user.email "name@domain.com"
 ```
 
 ## Configuration
-Inside `trell-snapshot.sh` there are four settings that need to be set, with only two really being required.
+Inside `trello-snapshot.sh` there are four settings that need to be set, with only two really being required.
 
 ### Required
 Set the Git repository location without a trailing slash
