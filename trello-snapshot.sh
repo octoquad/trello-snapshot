@@ -4,7 +4,7 @@
 # Trello Snapshot
 #
 # Author: Bruce Pieterse <dev@otq.za.net>
-# Version: 0.1
+# Version: 0.2
 #
 
 #
