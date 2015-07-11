@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Trello Snapshot
 #
 # Author: Bruce Pieterse <dev@otq.za.net>
-# Version: 0.1
+# Version: 0.2
 #
 
 #
@@ -19,6 +19,9 @@ GIT_COMMIT_MESSAGE=''
 
 ## Trello URL to download Trello Board JSON
 TRELLO_URL=''
+
+## Prettify JSON file to store only differences in git (requires jq)
+JQ_PRETTIFY='true'
 
 ## Local file name for storing Trello Board JSON and to use in a git commit
 FILE_NAME='.json'
@@ -59,16 +62,42 @@ git_commit_file() {
     if [ -e $FULL_PATH ]; then
         cd $GIT_REPO
 
-        git add $FILE_NAME
-        git commit -m "$GIT_COMMIT_MESSAGE"
+        if [ ! -z $JQ_PRETTIFY ]; then
+            if [ $JQ_PRETTIFY = "true" ]; then
+                jq_prettify
+            fi
+        fi
+
+        $GIT_CMD add $FILE_NAME
+        $GIT_CMD commit -m "$GIT_COMMIT_MESSAGE"
+    fi
+}
+
+jq_exists() {
+    if hash jq 2> /dev/null; then
+        JQ_CMD=jq
+    else
+        echo -e '[!] jq is missing! Please install the package \033[1mjq\033[0m if you want to prettify the JSON file' \
+        ' before storing it in git.'
+
+        exit 1
+    fi
+}
+
+jq_prettify() {
+    jq_exists
+
+    if [ ${#JQ_CMD} -gt 0 ]; then
+        $JQ_CMD '.' $FULL_PATH > "$FULL_PATH.tmp"
+        mv "$FULL_PATH.tmp" $FULL_PATH
     fi
 }
 
 git_config_email_check() {
-    len=`git config user.email`
+    len=$(git config user.email)
     len="${#len}"
 
-    if [ $len -lt 5 ]; then
+    if [ "$len" -lt 5 ]; then
         echo -e "[!] Please set a valid git e-mail address with" \
         "\033[1mgit config --global user.email\033[0m name@example.com"
 
@@ -77,10 +106,10 @@ git_config_email_check() {
 }
 
 git_config_name_check() {
-    len=`git config user.name`
+    len=$(git config user.name)
     len="${#len}"
 
-    if [ $len -lt 3 ]; then
+    if [ "$len" -lt 3 ]; then
         echo -e "[!] Please set a valid git name with \033[1mgit config --global user.name\033[0m Name Here"
 
         exit 1
@@ -93,8 +122,8 @@ git_config_check() {
 }
 
 git_exists() {
-    if git --version &> /dev/null; then
-        GIT_CMD=`which git`
+    if hash git 2> /dev/null; then
+        GIT_CMD=git
     else
         echo -e '[!] Git is missing! Please install the package \033[1mgit-core\033[0m and re-run this script.'
 
@@ -129,8 +158,8 @@ git_repo_initialize() {
 }
 
 wget_exists() {
-    if wget --version &> /dev/null; then
-        WGET_CMD=`which wget`
+    if hash wget 2> /dev/null; then
+        WGET_CMD=wget
     else
         echo -e '[!] Please install the package \033[1mwget\033[0m and re-run this script.'
 

@@ -6,6 +6,7 @@ A simple bash script to fetch a Trello board as JSON and store it automatically 
 * bash
 * wget
 * git
+* jq
 
 ## Setup
 
@@ -15,20 +16,20 @@ Hey, you never know...
 Using **su**:
 
 ```
-# apt-get install wget git-core
+# apt-get install wget git-core jq
 ```
 
 Using **sudo**
 
 ```
-sudo apt-get install wget git-core
+sudo apt-get install wget git-core jq
 ```
 
 ### Git user name and e-mail address
 You can skip this step if you have already hacked on and contributed to other projects that use git. If not, welcome :)
 
 ```shell
-git config --global user.name "Goas Sasde"
+git config --global user.name "Your name here"
 ```
 and
 
@@ -37,7 +38,7 @@ git config --global user.email "name@domain.com"
 ```
 
 ## Configuration
-Inside `trello-snapshot.sh` there are four settings that need to be set, with only two really being required.
+Inside `trello-snapshot.sh` there are five settings that need to be set, with only two really being required.
 
 ### Required
 Set the Git repository location without a trailing slash
@@ -53,7 +54,7 @@ TRELLO_URL='https://trello.com/b/unique-id.json'
 ### Optional
 The default commit message to use
 ```shell
-GIT_COMMIT_MESSAGE='Updated Trello Board' # Default
+GIT_COMMIT_MESSAGE='Updated Trello Board'
 ```
 
 An example would be:
@@ -62,10 +63,16 @@ An example would be:
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-
 Local file name for storing Trello Board JSON file and to use in git
 ```shell
-FILE_NAME='trello-board.json' # Default
+FILE_NAME='trello-board.json'
+```
+
+Prettify JSON before storing in git. This is useful if you want to see
+changes made using `git diff HEAD^..HEAD`
+
+```shell
+JQ_PRETTIFY="true" # or false
 ```
 
 That's it. Time to backup your Trello board.

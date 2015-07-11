@@ -1,0 +1,9 @@
+Trello Snapshot Change Log
+
+0.2
+* Added support to minify incoming JSON using jq, a command-line JSON processor
+* Updated shebang to use /usr/bin/env instead
+* Syntax fixes
+
+0.1
+Initial Release
