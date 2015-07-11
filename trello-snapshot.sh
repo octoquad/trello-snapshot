@@ -94,10 +94,10 @@ jq_prettify() {
 }
 
 git_config_email_check() {
-    len=`git config user.email`
+    len=$(git config user.email)
     len="${#len}"
 
-    if [ $len -lt 5 ]; then
+    if [ "$len" -lt 5 ]; then
         echo -e "[!] Please set a valid git e-mail address with" \
         "\033[1mgit config --global user.email\033[0m name@example.com"
 
@@ -106,10 +106,10 @@ git_config_email_check() {
 }
 
 git_config_name_check() {
-    len=`git config user.name`
+    len=$(git config user.name)
     len="${#len}"
 
-    if [ $len -lt 3 ]; then
+    if [ "$len" -lt 3 ]; then
         echo -e "[!] Please set a valid git name with \033[1mgit config --global user.name\033[0m Name Here"
 
         exit 1
@@ -122,8 +122,8 @@ git_config_check() {
 }
 
 git_exists() {
-    if git --version &> /dev/null; then
-        GIT_CMD=`which git`
+    if hash git 2> /dev/null; then
+        GIT_CMD=git
     else
         echo -e '[!] Git is missing! Please install the package \033[1mgit-core\033[0m and re-run this script.'
 
@@ -158,8 +158,8 @@ git_repo_initialize() {
 }
 
 wget_exists() {
-    if wget --version &> /dev/null; then
-        WGET_CMD=`which wget`
+    if hash wget 2> /dev/null; then
+        WGET_CMD=wget
     else
         echo -e '[!] Please install the package \033[1mwget\033[0m and re-run this script.'
 
